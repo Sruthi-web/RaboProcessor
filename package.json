@@ -1,7 +1,7 @@
 {
-  "name": "angular-7-webpack-4-boilerplate",
+  "name": "rabo-processor",
   "version": "1.0.0",
-  "description": "Angular 7 application with webpack 4 boilerplate",
+  "description": "RaboProcessor Application",
   "scripts": {
     "webpack-dev": "cross-env NODE_ENV=development webpack --mode development",
     "webpack-prod": "cross-env NODE_ENV=production webpack --mode production",
@@ -12,11 +12,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/samteb/Angular-7-Webpack-4.git"
+    "url": "https://github.com/Sruthi-web/RaboProcessor.git"
   },
-  "author": "samteb <sam.teboul@gmail.com>",
+  "author": "sruthi <sruthiken@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/samteb/Angular-7-Webpack-4",
+  "homepage": "https://github.com/Sruthi-web/RaboProcessor",
   "dependencies": {
     "@angular/animations": "~7.2",
     "@angular/common": "~7.2",

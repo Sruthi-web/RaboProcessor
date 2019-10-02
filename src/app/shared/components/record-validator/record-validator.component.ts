@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { Record } from '../../../shared/models/record.model';
+
 @Component({
     selector: 'record-validator',
     templateUrl: './record-validator.component.html',
@@ -13,6 +15,7 @@ export class RecordValidatorComponent {
         const reader = new FileReader();
         reader.onload = () => {
             let customerRecords = this.csvToJson(reader.result);
+            // customerRecords = this.validateEndBalance(customerRecords);
             this.validateRecords(customerRecords);
         };
         reader.readAsText(inputFile.files[0]);
@@ -22,13 +25,16 @@ export class RecordValidatorComponent {
     csvToJson(csv: any) {
         let rows = csv.split("\n");
         let records = [];
-        var headers = rows[0].split(",");
+        let recordHeaders = rows[0].split(",");
+        recordHeaders = recordHeaders.map((recordHeader: string) => {
+            return recordHeader.replace(/\s+/g, "").toLowerCase();
+        })
 
         for (var i = 1; i < rows.length; i++) {
             var obj = {};
-            var currentline = rows[i].split(",");
-            for (var j = 0; j < headers.length; j++) {
-                obj[headers[j]] = currentline[j];
+            var currentRecord = rows[i].split(",");
+            for (var j = 0; j < recordHeaders.length; j++) {
+                obj[recordHeaders[j]] = currentRecord[j];
             }
             records.push(obj);
         }
@@ -49,10 +55,20 @@ export class RecordValidatorComponent {
         // }
         // console.log(result);
 
-        const lookup = records.reduce((a:any, e:any) => {
-  a[e.Reference] = e.Reference in a ? ++a[e.Reference] : 0;
-  return a;
-}, {});
-console.log(records.filter((e:any) => lookup[e.Reference]));
+        const lookup = records.reduce((a: any, e: any) => {
+            a[e.reference] = e.reference in a ? ++a[e.reference] : 0;
+            return a;
+        }, {});
+        console.log(records.filter((e: any) => lookup[e.reference]));
+    }
+
+    validateEndBalance(records: any) {
+        return records.filter(function (record: any) {
+            if (+record.mutation > 0) {
+                return (+(+record.startbalance + +record.mutation).toFixed(2)) === +record.endbalance;
+            } else {
+                return (+(record.startbalance - Math.abs(+record.mutation)).toFixed(2)) === +record.endbalance;
+            }
+        });
     }
 }
